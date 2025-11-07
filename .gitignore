@@ -1,8 +1,8 @@
 # Bazel build outputs
-bazel-bin/
-bazel-genfiles/
-bazel-out/
-bazel-testlogs/
+/bazel-bin/*
+/bazel-genfiles/*
+/bazel-out/*
+/bazel-testlogs/*
 MODULE.bazel.lock
 
 # User-specific files
