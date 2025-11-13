@@ -29,5 +29,5 @@ private:
     MessageBroker& m_broker;
     boost::asio::streambuf m_buffer; 
 
-
+    static int getActiveSessionsCount();
 };
