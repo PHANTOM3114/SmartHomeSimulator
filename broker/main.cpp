@@ -19,7 +19,7 @@ int main() {
         io_context.run();
 
     } 
-    catch (const smarthome::common::SmartHomeException& e) {
+    catch (const common::SmartHomeException& e) {
         std::cerr << "Критична помилка Smarthome: " << e.what() << std::endl;
         return 1;
     } 

@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace smarthome::common {
+namespace common {
 
 class SmartHomeException : public std::runtime_error {
 public:

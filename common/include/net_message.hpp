@@ -4,7 +4,7 @@
 #include <nlohmann/json.hpp>
 #include "smart_home_exception.hpp" // Підключаємо наші винятки
 
-namespace smarthome::common {
+namespace common {
 
 struct NetMessage {
     
@@ -43,4 +43,4 @@ struct NetMessage {
     }
 };
 
-} // namespace smarthome::common
+} // namespace common

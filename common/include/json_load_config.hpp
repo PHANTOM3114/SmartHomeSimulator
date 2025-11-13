@@ -3,6 +3,8 @@
 #include <nlohmann/json.hpp>
 #include "common/include/smart_home_exception.hpp"
 
+namespace common {
+
 class JsonLoadConfig {
 public:
     explicit JsonLoadConfig(const std::string& path);
@@ -20,7 +22,7 @@ public:
         } catch (const nlohmann::json::exception& e) {
             // Якщо ключ не знайдено (.at) або тип невірний (.get)
             // Кидаємо *твій* кастомний виняток
-            throw smarthome::common::ConfigurationError(
+            throw common::ConfigurationError(
                 "Ключ не знайдено або невірний тип у конфігу: '" + key + "'. Деталі: " + e.what()
             );
         }
@@ -29,3 +31,6 @@ public:
 private:
     nlohmann::json m_configData;
 };
+
+}
+
