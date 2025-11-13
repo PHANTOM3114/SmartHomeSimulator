@@ -4,6 +4,7 @@ cc_library(
     name = "common",
 
     hdrs = glob(["include/**/*.hpp"]),
+    srcs = glob(["src/**/*.cpp"]),
     strip_include_prefix = "include",
 
     visibility = ["//visibility:public"],
