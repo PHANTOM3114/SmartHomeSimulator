@@ -1,0 +1,21 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_library(
+    name = "broker_lib",
+    
+    srcs = glob(["src/**/*.cpp"]),
+    hdrs = glob(["include/**/*.hpp"]),
+    strip_include_prefix = "include",
+    
+    deps = [
+        "//common:common",
+        "@nlohmann_json//:json",
+        "@boost.asio//:boost.asio",
+    ],
+)
+
+cc_binary(
+    name = "broker",
+    srcs = ["main.cpp"],
+    deps = [":broker_lib"],
+)
