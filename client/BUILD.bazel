@@ -16,5 +16,6 @@ cc_library(
 cc_binary(
     name = "client",
     srcs = ["main.cpp"],
-    deps = [":client_lib"]
+    deps = [":client_lib"],
+    data = ["//:config_file"]
 )

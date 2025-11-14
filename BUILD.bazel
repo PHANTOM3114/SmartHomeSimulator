@@ -11,3 +11,9 @@ refresh_compile_commands(
     exclude_headers = "all",
 )
 
+filegroup(
+    name = "config_file",
+    srcs = ["config.json"],
+    visibility = ["//visibility:public"],
+)
+

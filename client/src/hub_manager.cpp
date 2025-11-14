@@ -1,46 +1,71 @@
 #include "./client/include/hub_manager.hpp"
+#include "./client/include/smart_light_proxy.hpp"
 
 HubManager::HubManager(const std::string& config_path)
-    : m_config(config_path) // 1. Завантажуємо конфіг (або падаємо з ConfigurationError)
+    : m_config(config_path) 
 {
-    // 2. Витягуємо дані з конфігу (або падаємо з ConfigurationError)
+    // 1. Завантажуємо конфіг
     m_brokerIp = m_config.getValue<std::string>("broker_ip");
     m_brokerPort = m_config.getValue<int>("broker_port");
 
-    // 3. Створюємо "Поштаря" (BrokerConnection)
-    //    Передаємо йому НАШ context і посилання на СЕБЕ
+    // 2. Створюємо "Поштаря" (BrokerConnection)
     m_broker_conn = std::make_unique<BrokerConnection>(*this, m_context);
     
-    std::cout << "[HubManager] Ініціалізовано." << std::endl;
+    // 3. СТВОРЮЄМО НАШІ ДЕВАЙСИ (Проксі)
+    //    Ми передаємо "Поштарю" посилання на *нашого* m_broker_conn
+    //    Це і є той "ланцюг", який ти хотів.
+    
+    // (Для тесту захардкодимо топік)
+    std::string light_topic = "smarthome/living_room/light1";
+    
+    // Створюємо проксі
+    auto light_proxy = std::make_unique<SmartLightProxy>(*m_broker_conn, light_topic);
+
+    // Додаємо його у вектор.
+    // light_proxy (типу SmartLightProxy*) автоматично
+    // кастується до IotDevice* (поліморфізм!)
+    m_devices.push_back(std::move(light_proxy));
+
+    // TODO: Можна додати ще (інший топік, інший проксі)
+    // m_devices.push_back(std::make_unique<SmartThermostatProxy>(...));
+    
+    std::cout << "[HubManager] Ініціалізовано. " << m_devices.size() << " девайс(ів) завантажено." << std::endl;
 }
 
 void HubManager::run()
 {
     std::cout << "[HubManager] Запуск..." << std::endl;
-    
-    // 1. Кажемо "Поштарю" підключитися (це СИНХРОННИЙ виклик)
-    //    Якщо він впаде, він кине ConnectionError,
-    //    яке зловить наш main.cpp
     m_broker_conn->connect(m_brokerIp, m_brokerPort);
-
-    // 2. ЗАПУСКАЄМО ГОЛОВНИЙ ЦИКЛ ОБРОБКИ
-    //    Ця команда ЗАБЛОКУЄ потік (main), доки
-    //    не буде викликано m_context.stop() або не станеться помилка.
-    //    Всі асинхронні read_handler'и будуть працювати тут.
     std::cout << "[HubManager] Підключено. Входжу в цикл подій..." << std::endl;
-    
-    m_context.run(); // <--- ОСЬ ТУТ ЖИВЕ ПРОГРАМА
+    m_context.run();
 }
 
-// Це наш "Секретар", якого викликає "Поштар"
+// Це наш "Секретар" (заглушка)
 void HubManager::onMessageReceived(const common::NetMessage& msg)
 {
-    std::cout << "[HubManager] Отримано повідомлення: " 
-              << msg.serialize() << std::endl;
+    std::cout << "[HubManager] Отримано повідомлення: " << msg.serialize() << std::endl;
     
-    // TODO: В майбутньому тут буде логіка:
-    // 1. Десеріалізувати 'msg'
-    // 2. Подивитися "топік"
-    // 3. Передати повідомлення потрібному SmartLightProxy
-    //    (напр. m_devices[0]->handleMessage(msg))
+    // ☢️ ТЕХ. БОРГ: В майбутньому цей метод має парсити 'msg',
+    // знаходити потрібний 'm_devices[i]' і викликати 
+    // m_devices[i]->handleIncomingMessage(msg)
+}
+
+// --- РЕАЛІЗАЦІЯ МЕТОДУ ДЛЯ MAIN ---
+void HubManager::triggerDeviceOn(int index)
+{
+    // Перевірка, щоб не впасти
+    if (index < 0 || index >= m_devices.size()) {
+        std::cerr << "[HubManager] Помилка: Невірний індекс девайсу: " << index << std::endl;
+        return;
+    }
+
+    std::cout << "[HubManager] == ТРИГЕР: Вмикаю девайс " << index << " ==" << std::endl;
+    
+    // --- ОСЬ ТВОЯ ЛОГІКА "ПО ІНДЕКСУ" ---
+    // 1. Звертаємось по індексу (отримуємо IotDevice*)
+    // 2. Викликаємо віртуальний метод turn_on() (це пізнє зв'язування, вимога 'b')
+    m_devices[index]->turn_on();
+    
+    // 3. 'SmartLightProxy::turn_on()' (Фасад) 
+    //    викликає 'm_broker_conn.publish()'
 }

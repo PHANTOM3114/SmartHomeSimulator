@@ -37,7 +37,7 @@ void ClientSession::handle_read(const boost::system::error_code& error, std::siz
         try {
             m_broker.handleMessage(line + "\n", shared_from_this());
 
-        } catch (const smarthome::common::InvalidMessageError& e) {
+        } catch (const common::InvalidMessageError& e) {
             std::cerr << "[Session] Помилка повідомлення від клієнта: " << e.what() << std::endl;
             
             writeMessage("ERROR: Invalid message format\n");

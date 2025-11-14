@@ -28,6 +28,7 @@ public:
      * @brief Колбек. Викликається з BrokerConnection, коли приходить повідомлення.
      */
     void onMessageReceived(const common::NetMessage& msg);
+    void triggerDeviceOn(int index);
 
 private:
     // --- ОСНОВНІ КОМПОНЕНТИ ---
@@ -43,6 +44,6 @@ private:
     int m_brokerPort;
 
     // TODO: Тут буде список девайсів
-    // std::vector<std::unique_ptr<IotDevice>> m_devices;
+    std::vector<std::unique_ptr<IotDevice>> m_devices;
 };
     
