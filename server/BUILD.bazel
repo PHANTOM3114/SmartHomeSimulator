@@ -1,7 +1,7 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary")
 
 cc_library(
-    name = "client_lib",
+    name = "server_lib",
     
     srcs = glob(["src/**/*.cpp"]),
     hdrs = glob(["include/**/*.hpp"]),
@@ -9,15 +9,15 @@ cc_library(
     
     deps = [
         "//common:common",
+        "//client:client_lib",
         "@nlohmann_json//:json",
+        "@boost.asio//:boost.asio",
     ],
-
-    visibility = ["//visibility:public"],
 )
 
 cc_binary(
-    name = "client",
+    name = "server",
     srcs = ["main.cpp"],
-    deps = [":client_lib"],
+    deps = [":server_lib"],
     data = ["//:config_file"]
 )

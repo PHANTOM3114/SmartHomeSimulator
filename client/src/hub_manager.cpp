@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "./client/include/hub_manager.hpp"
 #include "./client/include/smart_light_proxy.hpp"
 
@@ -26,11 +28,19 @@ void HubManager::run()
     m_context.run();
 }
 
-void HubManager::onMessageReceived(const common::NetMessage& msg)
+void HubManager::onMessageReceived(const std::string& topic, const common::NetMessage& msg)
 {
-    std::cout << "[HubManager] Отримано повідомлення: " << msg.serialize() << std::endl;
-}
+    std::cout << "[HubManager] Отримано NetMessage. Топік: '" << topic << "'" << std::endl;
 
+    for (const auto& device : m_devices) 
+    {
+        if (device->getTopic() == topic) 
+        {
+            device->handleIncomingMessage(msg);
+            return; 
+        }
+    }
+}
 void HubManager::triggerDeviceOn(int index)
 {
     if (index < 0 || index >= m_devices.size()) {

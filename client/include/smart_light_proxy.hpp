@@ -16,6 +16,8 @@ public:
 
     void turn_off() override;
 
+    std::string getTopic() const;
+
     nlohmann::json get_status() override;
 
     void handleIncomingMessage(const common::NetMessage& msg);

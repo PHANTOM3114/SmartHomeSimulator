@@ -45,22 +45,26 @@ void SmartLightProxy::turn_off()
     }
 }
 
-nlohmann::json SmartLightProxy::get_status()
+std::string SmartLightProxy::getTopic() const
 {
-    std::cout << "[SmartLightProxy] Надаю локальний статус: " << m_last_known_status.dump() << std::endl;
-    return m_last_known_status;
+    return m_topic_base;
 }
 
 void SmartLightProxy::handleIncomingMessage(const common::NetMessage& msg)
 {
-    std::cout << "[SmartLightProxy] Отримав вхідне повідомлення: " << msg.command << std::endl;
+    std::cout << "[SmartLightProxy] (" << m_topic_base << ") Отримав вхідне повідомлення: " << msg.command << std::endl;
 
     if (msg.command == common::NetMessage::CMD_SET_STATUS) 
     {
         m_last_known_status = msg.payload;
         
-        std::cout << "[SmartLightProxy] Статус оновлено: " 
+        std::cout << "[SmartLightProxy] (" << m_topic_base << ") Статус оновлено: " 
                   << m_last_known_status.dump() << std::endl;
-
     }
+}
+
+nlohmann::json SmartLightProxy::get_status()
+{
+    std::cout << "[SmartLightProxy] Надаю локальний статус: " << m_last_known_status.dump() << std::endl;
+    return m_last_known_status;
 }
