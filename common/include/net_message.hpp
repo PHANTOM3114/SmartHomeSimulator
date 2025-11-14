@@ -8,13 +8,11 @@ namespace common {
 
 struct NetMessage {
     
-    // --- Статичні константи команд ---
     static constexpr const char* CMD_TURN_ON = "cmd:turn_on";
     static constexpr const char* CMD_TURN_OFF = "cmd:turn_off";
     static constexpr const char* CMD_GET_STATUS = "cmd:get_status";
     static constexpr const char* CMD_SET_STATUS = "cmd:set_status";
 
-    // --- Поля даних ---
     std::string command;
     nlohmann::json payload;
 
@@ -23,7 +21,6 @@ struct NetMessage {
             {"command", this->command},
             {"payload", this->payload}
         };
-        // .dump() перетворює json на string
         return json_data.dump(); 
     }
 
@@ -36,11 +33,10 @@ struct NetMessage {
             j.at("payload").get_to(msg.payload);
             
         } catch (const nlohmann::json::exception& e) {
-            // Кидаємо наш кастомний виняток
             throw InvalidMessageError(std::string("Failed to parse NetMessage: ") + e.what());
         }
         return msg;
     }
 };
 
-} // namespace common
+} 

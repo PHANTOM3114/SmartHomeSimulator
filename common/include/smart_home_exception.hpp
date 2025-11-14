@@ -6,7 +6,6 @@ namespace common {
 
 class SmartHomeException : public std::runtime_error {
 public:
-    // Використовуємо конструктор батьківського класу
     using std::runtime_error::runtime_error;
 };
 
@@ -25,4 +24,4 @@ public:
     using SmartHomeException::SmartHomeException;
 };
 
-} // namespace smarthome::common
+} 

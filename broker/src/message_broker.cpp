@@ -1,6 +1,9 @@
 #include <iostream>
 #include "message_broker.hpp"
 
+namespace asio = boost::asio;
+using asio::ip::tcp;
+
 const int BROKER_PORT = 9000;
 
 MessageBroker::MessageBroker(asio::io_context& io_context)

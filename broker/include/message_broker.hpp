@@ -7,14 +7,11 @@
 
 #include "client_session.hpp" 
 
-namespace asio = boost::asio;
-using asio::ip::tcp; // REPLACE IN THE CPP FILE!!!!!!!
-
 class ClientSession;
 
 class MessageBroker {
 public:
-    MessageBroker(asio::io_context& io_context);
+    MessageBroker(boost::asio::io_context& io_context);
 
     void start();
     void handleMessage(const std::string& msg, std::shared_ptr<ClientSession> sender);
@@ -26,8 +23,8 @@ private:
     void handle_accept(std::shared_ptr<ClientSession> new_session,
                        const boost::system::error_code& error);
 
-    asio::io_context& m_context;
-    tcp::acceptor m_acceptor;
+    boost::asio::io_context& m_context;
+    boost::asio::ip::tcp::acceptor m_acceptor;
     
     std::list<std::weak_ptr<ClientSession>> m_sessions;
 };

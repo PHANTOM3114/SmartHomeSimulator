@@ -8,15 +8,12 @@
 #include "common/include/net_message.hpp"
 #include "common/include/iot_device.hpp"
 
-// Випереджаюче оголошення
 class HubManager; 
 
 class BrokerConnection {
 public:
-    // --- ПУБЛІЧНІ МЕТОДИ ---
     explicit BrokerConnection(HubManager& hub, boost::asio::io_context& ctx);
     
-    // ! ДОДАНО ДЕСТРУКТОР (який я забув)
     ~BrokerConnection(); 
 
     void connect(const std::string& host, int port);
@@ -24,17 +21,12 @@ public:
     void subscribe(const std::string& topic);
 
 private:
-    // --- ПРИВАТНІ МЕТОДИ ---
-    
-    // Метод з діаграми
     void read_handler(); 
 
-    // ! ДОДАНІ ХЕЛПЕРИ (яких я забув)
     void start_read_loop();
     void stop();
-    void send_sync(const std::string& message); // <--- твій 'send_sync'
+    void send_sync(const std::string& message);
 
-    // --- ПОЛЯ ---
     boost::asio::io_context& m_context;
     boost::asio::ip::tcp::socket m_socket;
     HubManager& hub;

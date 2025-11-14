@@ -15,13 +15,9 @@ public:
     template<typename T>
     T getValue(const std::string& key) const {
         try {
-            // .at(key) - шукає ключ
-            // .get<T>() - намагається конвертувати в тип T
             return m_configData.at(key).get<T>();
         
         } catch (const nlohmann::json::exception& e) {
-            // Якщо ключ не знайдено (.at) або тип невірний (.get)
-            // Кидаємо *твій* кастомний виняток
             throw common::ConfigurationError(
                 "Ключ не знайдено або невірний тип у конфігу: '" + key + "'. Деталі: " + e.what()
             );
