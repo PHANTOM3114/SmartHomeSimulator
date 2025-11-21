@@ -1,0 +1,22 @@
+
+module(
+    name = "smarthomesimulator",
+    version = "1.0.0"
+)
+
+# C++ rules
+bazel_dep(name = "rules_cc", version = "0.0.9")
+
+# Boost dependencies
+bazel_dep(name = "boost.asio", version = "1.89.0")
+bazel_dep(name = "boost.exception", version = "1.89.0")
+
+# Others
+bazel_dep(name = "nlohmann_json", version = "3.12.0")
+bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
+
+git_override(
+    module_name = "hedron_compile_commands",
+    remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
+    commit = "abb61a688167623088f8768cc9264798df6a9d10",
+)

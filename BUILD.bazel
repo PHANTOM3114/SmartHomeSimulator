@@ -1,0 +1,21 @@
+# BUILD.bazel
+load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
+
+refresh_compile_commands(
+    name = "refresh_compile_commands",
+    targets = {
+        "//server:server" : "",
+        "//common:common" : "",
+        "//client:client" : ""
+    },
+
+    exclude_external_sources = True,
+    exclude_headers = "all",
+)
+
+filegroup(
+    name = "config_file",
+    srcs = ["config.json"],
+    visibility = ["//visibility:public"],
+)
+

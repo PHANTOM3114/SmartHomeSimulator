@@ -1,0 +1,23 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_library(
+    name = "client_lib",
+    
+    srcs = glob(["src/**/*.cpp"]),
+    hdrs = glob(["include/**/*.hpp"]),
+    strip_include_prefix = "include",
+    
+    deps = [
+        "//common:common",
+        "@nlohmann_json//:json",
+    ],
+
+    visibility = ["//visibility:public"],
+)
+
+cc_binary(
+    name = "client",
+    srcs = ["main.cpp"],
+    deps = [":client_lib"],
+    data = ["//:config_file"]
+)

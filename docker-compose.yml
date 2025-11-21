@@ -1,0 +1,25 @@
+services:
+  broker:
+    build: .
+    image: smarthome-image
+    container_name: broker
+    ports:
+      - "9000:9000"
+    command: ./bazel-bin/broker/broker
+
+  server:
+    image: smarthome-image
+    container_name: server
+    depends_on:
+      - broker
+    command: >
+      sh -c "echo '{\"broker_ip\": \"broker\", \"broker_port\": 9000}' > config.json && sleep 2 && ./bazel-bin/server/server"
+
+  client:
+    image: smarthome-image
+    container_name: client
+    depends_on:
+      - broker
+      - server
+    command: >
+      sh -c "echo '{\"broker_ip\": \"broker\", \"broker_port\": 9000}' > config.json && sleep 5 && ./bazel-bin/client/client"

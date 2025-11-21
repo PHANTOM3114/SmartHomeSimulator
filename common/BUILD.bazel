@@ -1,0 +1,17 @@
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_binary")
+
+cc_library(
+    name = "common",
+
+    hdrs = glob(["include/**/*.hpp"]),
+    srcs = glob(["src/**/*.cpp"]),
+    strip_include_prefix = "include",
+
+    visibility = ["//visibility:public"],
+
+    deps = [
+        "@boost.asio",
+        "@boost.exception",
+        "@nlohmann_json//:json",
+    ],
+)
